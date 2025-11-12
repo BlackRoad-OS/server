@@ -9,7 +9,6 @@ declare(strict_types=1);
  */
 namespace OC\Activity;
 
-use OCA\Activity\AppInfo\Application;
 use OCP\Activity\Exceptions\InvalidValueException;
 use OCP\Activity\IEvent;
 use OCP\IAppConfig;
@@ -19,51 +18,30 @@ use OCP\RichObjectStrings\IValidator;
 use Psr\Log\LoggerInterface;
 
 class Event implements IEvent {
-	/** @var string */
-	protected $app = '';
-	/** @var string */
-	protected $type = '';
-	/** @var string */
-	protected $affectedUser = '';
-	/** @var string */
-	protected $author = '';
-	/** @var int */
-	protected $timestamp = 0;
-	/** @var string */
-	protected $subject = '';
-	/** @var array */
-	protected $subjectParameters = [];
-	/** @var string */
-	protected $subjectParsed = '';
-	/** @var string */
-	protected $subjectRich = '';
+	protected string $app = '';
+	protected string $type = '';
+	protected string $affectedUser = '';
+	protected string $author = '';
+	protected int $timestamp = 0;
+	protected string $subject = '';
+	protected array $subjectParameters = [];
+	protected string $subjectParsed = '';
+	protected string $subjectRich = '';
 	/** @var array<string, array<string, string>> */
-	protected $subjectRichParameters = [];
-	/** @var string */
-	protected $message = '';
-	/** @var array */
-	protected $messageParameters = [];
-	/** @var string */
-	protected $messageParsed = '';
-	/** @var string */
-	protected $messageRich = '';
+	protected array $subjectRichParameters = [];
+	protected string $message = '';
+	protected array $messageParameters = [];
+	protected string $messageParsed = '';
+	protected string $messageRich = '';
 	/** @var array<string, array<string, string>> */
-	protected $messageRichParameters = [];
-	/** @var string */
-	protected $objectType = '';
-	/** @var int */
-	protected $objectId = 0;
-	/** @var string */
-	protected $objectName = '';
-	/** @var string */
-	protected $link = '';
-	/** @var string */
-	protected $icon = '';
-	/** @var bool */
-	protected $generateNotification = true;
-
-	/** @var IEvent|null */
-	protected $child;
+	protected array $messageRichParameters = [];
+	protected string $objectType = '';
+	protected int $objectId = 0;
+	protected string $objectName = '';
+	protected string $link = '';
+	protected string $icon = '';
+	protected bool $generateNotification = true;
+	protected ?IEvent $child;
 
 	public function __construct(
 		protected IValidator $richValidator,
@@ -171,7 +149,7 @@ class Event implements IEvent {
 			throw new InvalidValueException('subject');
 		}
 
-		$counter = $this->appConfig->getValueInt(Application::APP_ID, 'overly_long_activities', 0);
+		$counter = $this->appConfig->getValueInt('activity', 'overly_long_activities', 0);
 		foreach ($parameters as $parameter) {
 			if (strlen($parameter) > 4000) {
 				$counter++;
@@ -185,7 +163,7 @@ class Event implements IEvent {
 		}
 
 		if ($counter !== 0) {
-			$this->appConfig->setValueInt(Application::APP_ID, 'overly_long_activities', $counter);
+			$this->appConfig->setValueInt('activity', 'overly_long_activities', $counter);
 		}
 
 		$this->subject = $subject;
