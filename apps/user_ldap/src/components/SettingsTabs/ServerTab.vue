@@ -43,7 +43,7 @@
 				<NcTextField
 					:model-value="ldapConfigProxy.ldapPort"
 					:label="t('user_ldap', 'Port')"
-					:placeholder="389"
+					placeholder="389"
 					type="number"
 					autocomplete="off"
 					@change="(event) => ldapConfigProxy.ldapPort = event.target.value" />
